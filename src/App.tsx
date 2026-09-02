@@ -37,6 +37,8 @@ import {
   BarChart3
 } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 function MainAppContent({
   onProductsLoadedRef,
   onAlertsLoadedRef,
