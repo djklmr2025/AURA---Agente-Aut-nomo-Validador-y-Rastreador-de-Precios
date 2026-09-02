@@ -1,12 +1,18 @@
 import express from "express";
-import path from "path";
+import cors from "cors";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import { GoogleGenAI, Modality, Type } from "@google/genai";
+import { pathToFileURL, fileURLToPath } from "url";
+import path, { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 const PORT = 3000;
 
 app.use(express.json({ limit: "50mb" }));
@@ -1359,6 +1365,29 @@ Devuelve EXCLUSIVAMENTE un JSON con esta estructura exacta:
         "Validación de coincidencia de artículo e importe completada",
       ],
     });
+  }
+});
+
+// Gemini-lab API integration
+app.options('/api/edu-agent', (req, res) => res.status(200).end());
+app.all('/api/edu-agent', async (req, res, next) => {
+  try {
+    const module = await import(pathToFileURL(path.join(__dirname, 'api', 'edu-agent.js')).href);
+    const handler = module.default || module;
+    return handler(req, res);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+app.options('/api/chat', (req, res) => res.status(200).end());
+app.all('/api/chat', async (req, res, next) => {
+  try {
+    const module = await import(pathToFileURL(path.join(__dirname, 'api', 'chat.js')).href);
+    const handler = module.default || module;
+    return handler(req, res);
+  } catch (error) {
+    return next(error);
   }
 });
 

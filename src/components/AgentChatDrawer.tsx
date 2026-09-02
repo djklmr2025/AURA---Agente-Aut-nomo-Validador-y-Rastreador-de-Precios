@@ -11,6 +11,9 @@ import {
   ShoppingBag
 } from "lucide-react";
 import { ChatMessage, ProductScanResult } from "../types";
+import ReactMarkdown from "react-markdown";
+
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 interface AgentChatDrawerProps {
   isOpen: boolean;
@@ -67,7 +70,7 @@ export const AgentChatDrawer: React.FC<AgentChatDrawerProps> = ({
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/agent/chat", {
+      const res = await fetch(`${API_URL}/api/agent/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

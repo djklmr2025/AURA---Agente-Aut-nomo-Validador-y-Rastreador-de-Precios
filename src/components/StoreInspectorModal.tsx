@@ -17,6 +17,8 @@ import { StorePriceOffer } from "../types";
 import { buildDirectStoreUrl } from "../utils/urlHelper";
 import { convertAndFormatPrice, getRegionConfig } from "../utils/regionUtils";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 interface StoreInspectorModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -57,7 +59,7 @@ export const StoreInspectorModal: React.FC<StoreInspectorModalProps> = ({
     let isMounted = true;
     setLoading(true);
 
-    fetch("/api/agent/inspect-store", {
+    fetch(`${API_URL}/api/agent/inspect-store`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

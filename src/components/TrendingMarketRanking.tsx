@@ -20,7 +20,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { ProductScanResult, StorePriceOffer } from "../types";
-import { convertAndFormatPrice } from "../utils/currencyConverter";
+import { convertAndFormatPrice } from "../utils/regionUtils";
 
 interface TrendingMarketRankingProps {
   products: ProductScanResult[];

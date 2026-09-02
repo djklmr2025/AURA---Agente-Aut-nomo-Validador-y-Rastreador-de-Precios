@@ -169,7 +169,7 @@ function MainAppContent({
     setCurrentQueryText(queryDisplay);
 
     try {
-      const response = await fetch("/api/agent/validate-and-search", {
+      const response = await fetch(`${API_URL}/api/agent/validate-and-search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -212,7 +212,7 @@ function MainAppContent({
       if (voiceEnabled && result.summary) {
         const voiceScript = `He validado el producto ${result.title}. Veredicto: ${result.authenticityVerdict}. La mejor oferta encontrada en tiempo real está en ${result.bestDeal?.storeName} por $${result.bestDeal?.price.toFixed(2)} ${result.bestDeal?.currency}. El registro de navegación ha sido guardado en memoria fotográfica.`;
         
-        fetch("/api/agent/tts", {
+        fetch(`${API_URL}/api/agent/tts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: voiceScript }),
@@ -291,7 +291,7 @@ function MainAppContent({
   };
 
   const handlePlayVoice = (text: string) => {
-    fetch("/api/agent/tts", {
+    fetch(`${API_URL}/api/agent/tts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   Bot, 
   Receipt, 
@@ -144,7 +145,7 @@ export const DaemonHubModal: React.FC<DaemonHubModalProps> = ({
         }
       ]);
 
-      const res = await fetch("/api/daemon/verify-order", {
+      const res = await fetch(`${API_URL}/api/daemon/verify-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -254,7 +255,7 @@ export const DaemonHubModal: React.FC<DaemonHubModalProps> = ({
     setOcrResult(null);
 
     try {
-      const res = await fetch("/api/daemon/verify-ticket", {
+      const res = await fetch(`${API_URL}/api/daemon/verify-ticket`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
