@@ -13,7 +13,7 @@ import {
 import { ChatMessage, ProductScanResult } from "../types";
 import ReactMarkdown from "react-markdown";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = import.meta.env.VITE_API_URL || "https://aura-backend-fdjk.onrender.com";
 
 interface AgentChatDrawerProps {
   isOpen: boolean;

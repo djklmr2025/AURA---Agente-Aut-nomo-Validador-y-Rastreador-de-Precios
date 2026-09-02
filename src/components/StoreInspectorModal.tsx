@@ -17,7 +17,7 @@ import { StorePriceOffer } from "../types";
 import { buildDirectStoreUrl } from "../utils/urlHelper";
 import { convertAndFormatPrice, getRegionConfig } from "../utils/regionUtils";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = import.meta.env.VITE_API_URL || "https://aura-backend-fdjk.onrender.com";
 
 interface StoreInspectorModalProps {
   isOpen: boolean;

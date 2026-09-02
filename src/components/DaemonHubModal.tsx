@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { ProductScanResult, VerifiedPurchase, DaemonHandshakeStep } from "../types";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://aura-backend-fdjk.onrender.com";
+
 interface DaemonHubModalProps {
   isOpen: boolean;
   onClose: () => void;
