@@ -1,4 +1,5 @@
 {
+  "name": "aura-validador-precios",
   "rewrites": [
     {
       "source": "/(.*)",
