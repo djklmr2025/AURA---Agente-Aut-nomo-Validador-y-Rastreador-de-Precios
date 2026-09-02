@@ -496,7 +496,7 @@ export const ProductVerdictView: React.FC<ProductVerdictViewProps> = ({
                   <CheckCircle2 className="w-3.5 h-3.5" /> Ventajas
                 </span>
                 <ul className="text-xs text-slate-300 space-y-1 pl-1">
-                  {alt.pros.map((p, idx) => (
+                  {(alt.pros || []).map((p, idx) => (
                     <li key={idx} className="flex items-start gap-1.5">
                       <span className="text-emerald-400">•</span>
                       <span>{p}</span>
@@ -510,7 +510,7 @@ export const ProductVerdictView: React.FC<ProductVerdictViewProps> = ({
                   <AlertTriangle className="w-3.5 h-3.5" /> Consideraciones
                 </span>
                 <ul className="text-xs text-slate-300 space-y-1 pl-1">
-                  {alt.cons.map((c, idx) => (
+                  {(alt.cons || []).map((c, idx) => (
                     <li key={idx} className="flex items-start gap-1.5">
                       <span className="text-amber-400">•</span>
                       <span>{c}</span>
