@@ -37,14 +37,14 @@ export const AmerioPayButton: React.FC<AmerioPayButtonProps> = ({
     if (!document.getElementById(scriptId)) {
       const script = document.createElement('script');
       script.id = scriptId;
-      script.src = 'https://arkaios.dpdns.org/sdk/arkaios-pay.js';
+      script.src = 'https://genimi44-by-wix-app44.web.app/sdk/arkaios-pay.js';
       script.async = true;
       script.onload = () => setSdkReady(true);
       script.onerror = () => {
-        // Fallback al endpoint de dev de GCP si dpdns falla
-        console.warn("No se pudo cargar desde dpdns, usando fallback GCP...");
+        // Fallback al subdominio secundario dpdns si el primario falla
+        console.warn("No se pudo cargar desde Firebase primario, usando fallback dpdns...");
         const fallbackScript = document.createElement('script');
-        fallbackScript.src = 'https://ais-dev-c4kmpo6rn3hqhsdhgz7p4i-53917996317.us-west2.run.app/sdk/arkaios-pay.js';
+        fallbackScript.src = 'https://arkaios.dpdns.org/sdk/arkaios-pay.js';
         fallbackScript.async = true;
         fallbackScript.onload = () => setSdkReady(true);
         document.body.appendChild(fallbackScript);
