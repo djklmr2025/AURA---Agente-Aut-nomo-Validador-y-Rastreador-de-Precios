@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { REGIONS, getRegionConfig } from "../utils/regionUtils";
 import { useAuth } from "../context/AuthContext";
+import { AmerioPayButton } from "./AmerioPayButton";
 
 interface HeaderProps {
   isLiveActive: boolean;
@@ -217,6 +218,18 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Demonio Post-Compra</span>
             </button>
           )}
+
+          {/* Amerio Pay Test Button */}
+          <div className="hidden lg:block scale-90 origin-right">
+            <AmerioPayButton
+              amount={299.00}
+              itemTitle="Acceso Pro AURA Agent"
+              onPaymentSuccess={(recibo) => {
+                console.log("Código de autorización:", recibo.authorizationCode);
+                alert(`¡Gracias! Tu pago de $${recibo.amount} AMR-IO fue aprobado.`);
+              }}
+            />
+          </div>
 
           {/* Chat with Agent */}
           <button
