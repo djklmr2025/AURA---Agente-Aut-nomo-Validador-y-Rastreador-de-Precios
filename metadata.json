@@ -1,0 +1,6 @@
+{
+  "name": "AURA - Agente Autónomo Validador y Rastreador de Precios",
+  "description": "Agente vivo multimodal con reconocimiento visual, audio y texto, navegación autónoma en tiendas verificadas, validación de certificaciones y comparativa de mejores precios en tiempo real.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

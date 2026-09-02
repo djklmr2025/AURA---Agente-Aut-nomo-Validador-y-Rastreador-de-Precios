@@ -1,0 +1,120 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all unknown routes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User profile validation
+    function isValidUser(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+        data.email is string && data.email.size() <= 256 &&
+        (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 128)) &&
+        (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 1024)) &&
+        (!('selectedRegion' in data) || (data.selectedRegion is string && data.selectedRegion.size() <= 32)) &&
+        (!('voiceEnabled' in data) || data.voiceEnabled is bool);
+    }
+
+    // Product validation
+    function isValidProduct(data) {
+      return data.id is string && data.id.size() <= 128 &&
+        data.userId is string && data.userId == request.auth.uid &&
+        data.title is string && data.title.size() <= 512 &&
+        (!('brand' in data) || (data.brand is string && data.brand.size() <= 128)) &&
+        (!('model' in data) || (data.model is string && data.model.size() <= 128)) &&
+        (!('category' in data) || (data.category is string && data.category.size() <= 128)) &&
+        (!('authenticityScore' in data) || data.authenticityScore is number) &&
+        (!('authenticityVerdict' in data) || (data.authenticityVerdict is string && data.authenticityVerdict.size() <= 64)) &&
+        (!('summary' in data) || (data.summary is string && data.summary.size() <= 4096)) &&
+        (!('productImageUrl' in data) || (data.productImageUrl is string && data.productImageUrl.size() <= 2048)) &&
+        (!('imageScannedUrl' in data) || (data.imageScannedUrl is string && data.imageScannedUrl.size() <= 2048)) &&
+        (!('timestamp' in data) || data.timestamp is number);
+    }
+
+    // Price Alert validation
+    function isValidPriceAlert(data) {
+      return data.id is string && data.id.size() <= 128 &&
+        data.userId is string && data.userId == request.auth.uid &&
+        data.productId is string && data.productId.size() <= 128 &&
+        data.productTitle is string && data.productTitle.size() <= 512 &&
+        data.targetPrice is number && data.targetPrice >= 0 &&
+        data.currency is string && data.currency.size() <= 16 &&
+        data.createdAt is number &&
+        (!('triggered' in data) || data.triggered is bool);
+    }
+
+    // Verified Purchase validation
+    function isValidVerifiedPurchase(data) {
+      return data.id is string && data.id.size() <= 128 &&
+        data.userId is string && data.userId == request.auth.uid &&
+        data.productTitle is string && data.productTitle.size() <= 512 &&
+        data.storeName is string && data.storeName.size() <= 128 &&
+        data.paidPrice is number &&
+        data.currency is string && data.currency.size() <= 16 &&
+        data.verifiedAt is number &&
+        data.isDeliveredSatisfactorily is bool &&
+        (!('verificationMode' in data) || (data.verificationMode is string && data.verificationMode.size() <= 64)) &&
+        (!('orderId' in data) || (data.orderId is string && data.orderId.size() <= 128)) &&
+        (!('trackingNumber' in data) || (data.trackingNumber is string && data.trackingNumber.size() <= 128)) &&
+        (!('carrier' in data) || (data.carrier is string && data.carrier.size() <= 128)) &&
+        (!('ticketNumber' in data) || (data.ticketNumber is string && data.ticketNumber.size() <= 128)) &&
+        (!('certificateHash' in data) || (data.certificateHash is string && data.certificateHash.size() <= 128)) &&
+        (!('verificationVerdict' in data) || (data.verificationVerdict is string && data.verificationVerdict.size() <= 512));
+    }
+
+    // Test connection doc (for connectivity validation)
+    match /test/connection {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // User collection and subcollections
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+      allow delete: if isOwner(userId);
+
+      // Scanned products & Photographic memory vault subcollection
+      match /products/{productId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(productId) && isValidProduct(request.resource.data);
+        allow update: if isOwner(userId) && isValidId(productId) && isValidProduct(request.resource.data);
+        allow delete: if isOwner(userId) && isValidId(productId);
+      }
+
+      // Price alerts subcollection
+      match /priceAlerts/{alertId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(alertId) && isValidPriceAlert(request.resource.data);
+        allow update: if isOwner(userId) && isValidId(alertId) && isValidPriceAlert(request.resource.data);
+        allow delete: if isOwner(userId) && isValidId(alertId);
+      }
+
+      // Verified purchases subcollection
+      match /verifiedPurchases/{purchaseId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(purchaseId) && isValidVerifiedPurchase(request.resource.data);
+        allow update: if isOwner(userId) && isValidId(purchaseId) && isValidVerifiedPurchase(request.resource.data);
+        allow delete: if isOwner(userId) && isValidId(purchaseId);
+      }
+    }
+  }
+}

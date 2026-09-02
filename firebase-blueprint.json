@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with personal preferences and settings",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "selectedRegion": { "type": "string", "maxLength": 32 },
+        "voiceEnabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["userId", "email", "createdAt"]
+    },
+    "SavedProduct": {
+      "title": "SavedProduct",
+      "description": "Scanned or verified product stored in user's photographic memory vault",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 512 },
+        "brand": { "type": "string", "maxLength": 128 },
+        "model": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 128 },
+        "authenticityScore": { "type": "number" },
+        "authenticityVerdict": { "type": "string", "maxLength": 64 },
+        "certifications": { "type": "array" },
+        "riskFlags": { "type": "array" },
+        "bestDeal": { "type": "object" },
+        "storeOffers": { "type": "array" },
+        "priceTrend": { "type": "object" },
+        "productImageUrl": { "type": "string", "maxLength": 2048 },
+        "imageScannedUrl": { "type": "string", "maxLength": 2048 },
+        "summary": { "type": "string", "maxLength": 4096 },
+        "trajectoryLog": { "type": "object" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["id", "userId", "title", "timestamp"]
+    },
+    "PriceAlert": {
+      "title": "PriceAlert",
+      "description": "User price threshold monitoring alert",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "productTitle": { "type": "string", "maxLength": 512 },
+        "targetPrice": { "type": "number" },
+        "currentBestPrice": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 16 },
+        "createdAt": { "type": "number" },
+        "triggered": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "productId", "targetPrice", "currency", "createdAt"]
+    },
+    "VerifiedPurchase": {
+      "title": "VerifiedPurchase",
+      "description": "Real purchase & delivery verified either via Autonomous Daemon handshake or Manual Ticket OCR",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "productTitle": { "type": "string", "maxLength": 512 },
+        "brand": { "type": "string", "maxLength": 128 },
+        "model": { "type": "string", "maxLength": 128 },
+        "storeName": { "type": "string", "maxLength": 128 },
+        "storeDomain": { "type": "string", "maxLength": 128 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "trackingNumber": { "type": "string", "maxLength": 128 },
+        "carrier": { "type": "string", "maxLength": 128 },
+        "verificationMode": { "type": "string", "maxLength": 64 },
+        "verifiedAt": { "type": "number" },
+        "purchaseDate": { "type": "string", "maxLength": 64 },
+        "deliveryDate": { "type": "string", "maxLength": 64 },
+        "paidPrice": { "type": "number" },
+        "quotedMarketPrice": { "type": "number" },
+        "savingsRealized": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 16 },
+        "isDeliveredSatisfactorily": { "type": "boolean" },
+        "fulfillmentScore": { "type": "number" },
+        "ticketNumber": { "type": "string", "maxLength": 128 },
+        "certificateHash": { "type": "string", "maxLength": 128 },
+        "verificationVerdict": { "type": "string", "maxLength": 512 }
+      },
+      "required": ["id", "userId", "productTitle", "storeName", "verificationMode", "verifiedAt", "paidPrice", "currency", "isDeliveredSatisfactorily"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "Stores user profiles and preferences"
+    },
+    "/users/{userId}/products/{productId}": {
+      "schema": { "$ref": "SavedProduct" },
+      "description": "Stores scanned products and photographic memory logs for each user"
+    },
+    "/users/{userId}/priceAlerts/{alertId}": {
+      "schema": { "$ref": "PriceAlert" },
+      "description": "Stores active price monitoring alerts for each user"
+    },
+    "/users/{userId}/verifiedPurchases/{purchaseId}": {
+      "schema": { "$ref": "VerifiedPurchase" },
+      "description": "Stores real verified purchases and fulfillment proofs validated by AURA Daemon or Ticket OCR"
+    }
+  }
+}
